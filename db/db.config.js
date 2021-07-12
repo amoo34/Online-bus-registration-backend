@@ -3,7 +3,7 @@ const mongooes = require("mongoose");
 
 // mongodb connectivity
 // mongodb://10.122.0.4:27017/thinkiotadm:fpS3tGCZYxD2pm6v
-mongooes.connect("mongodb://127.0.0.1:27017/BusRegistration",{
+mongooes.connect("mongodb://user:user@cluster0-shard-00-00.exumz.mongodb.net:27017,cluster0-shard-00-01.exumz.mongodb.net:27017,cluster0-shard-00-02.exumz.mongodb.net:27017/drivers?ssl=true&replicaSet=atlas-7742fz-shard-0&authSource=admin&retryWrites=true&w=majority",{
     // mongooes.connect("mongodb://10.122.0.4:27017/thinkiotadm:fpS3tGCZYxD2pm6v",{
     useUnifiedTopology:true,
     useNewUrlParser:true,
@@ -19,4 +19,4 @@ mongooes.connect("mongodb://127.0.0.1:27017/BusRegistration",{
     }
 })
 .then((resp)=>console.log("database has been connected"))
-.catch((err)=>console.log("Error while connecting with db"))
+.catch((err)=>console.log("Error while connecting with db",err))

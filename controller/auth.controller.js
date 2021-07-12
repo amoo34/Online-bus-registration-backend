@@ -1,6 +1,8 @@
 const Bus=require("../model/bus.model");
 const Parent=require("../model/parent.model");
 const Student=require("../model/student.modal");
+const Driver1 = require("../model/driver1.model");
+
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 
@@ -276,4 +278,82 @@ async function getBus(req,res){
 }
 
 
-module.exports={getBus,deleteStudent,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic}
+async function  Driver1SignUp(req,res,next){
+    console.log(req.body)
+    try{
+
+        const {name,email,password}=req.body;
+
+        if(!name || !email || !password) {
+            res.status(400).json({message:"bad request"});
+        }
+
+        const doesExist = await Driver1.findOne({email});
+
+        if(doesExist){res.status(409).json({message: `${email} already exist`})}
+
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                hashedPass=hash
+                
+                
+                const student= new Driver1({email,name,password:hash});
+                student.save().then((resp)=>
+                    res.status(200).json(resp)
+                )
+                .catch((err)=>res.status(501).send(err));
+            });
+        });
+
+
+        
+    }
+    catch(error){
+        res.status(400).json(error);
+    }
+
+}
+
+async function DriverLogin1(req,res,next){
+
+    const {email,password}=req.body;
+    
+    await Driver1.findOne({email})
+    .then((usr)=>{
+        if(usr){
+            if(usr.bussNo === null)
+            {
+                res.status(400).json({message:"Buss is not Assigned. Please Contact admin"})
+            }
+else{
+    
+            bcrypt.compare(password, usr.password, function(err, result) {
+                if(result){
+                    let name=usr.regNumber;
+                    const accessToken = jwt.sign({ name }, 'energyToken');
+                    if(usr.isfee=="yes"){
+
+                        res.status(200).json({user:{usr},token:accessToken,message:"Log in successfull"})
+                    }else{
+                        res.status(400).json({message:"fee is not"})
+
+                    }
+                }else{
+                    res.status(401).json({message:'Password does not match'})
+                }  
+            })
+        }
+        }else{
+            res.status(501).json({message:'user account not exist'})
+        }
+
+    })
+    .catch((err)=>res.status(400).json({message:'Database connection error occured'}))
+    
+    
+
+}
+
+
+module.exports={getBus,deleteStudent,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic,Driver1SignUp,DriverLogin1}

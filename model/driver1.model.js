@@ -14,6 +14,10 @@ const DriverSchema=new Schema({
     Date:{
         type: Date,
         default: Date.now
+    },
+    bussNo:{
+        type:String,
+        default: null
     }
 });
 

@@ -9,6 +9,9 @@ route.post("/busregister",auth.Busregister);
 route.post("/parentregister",auth.Parentregister);
 route.post("/studentregister",auth.Studentregister);
 
+route.post("/driverSignup",auth.Driver1SignUp);
+route.post("/driverLogin",auth.DriverLogin1);
+
 // login controller
 route.post("/buslogin",auth.Buslogin);
 route.post("/parentlogin",auth.Parentlogin);

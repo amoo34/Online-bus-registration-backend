@@ -1,6 +1,8 @@
 const Bus=require("../model/bus.model");
 const Parent=require("../model/parent.model");
 const Student=require("../model/student.modal");
+
+const Driver = require("../model/driver1.model")
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
 

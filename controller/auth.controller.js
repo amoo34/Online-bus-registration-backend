@@ -354,4 +354,5 @@ else{
 }
 
 
+
 module.exports={getBus,deleteStudent,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic,Driver1SignUp,DriverLogin1}

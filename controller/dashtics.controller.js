@@ -45,8 +45,6 @@ const updateBusData =async (req,res,next) =>{
 }
 
 const updateStudentData =async (req,res,next) =>{
-
-
     console.log("update dash data",req.body.studentRegNumber,req.body.id)
     const _id = req.body.id
 

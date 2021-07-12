@@ -296,8 +296,6 @@ async function  Driver1SignUp(req,res,next){
         bcrypt.genSalt(saltRounds, function(err, salt) {
             bcrypt.hash(password, salt, function(err, hash) {
                 hashedPass=hash
-                
-                
                 const student= new Driver1({email,name,password:hash});
                 student.save().then((resp)=>
                     res.status(200).json(resp)
@@ -334,7 +332,7 @@ else{
                     const accessToken = jwt.sign({ name }, 'energyToken');
                     if(usr.isfee=="yes"){
 
-                        res.status(200).json({user:{usr},token:accessToken,message:"Log in successfull"})
+                        res.status(200).json({user:usr,idtoken:accessToken,message:"Log in successfull"})
                     }else{
                         res.status(400).json({message:"fee is not"})
 

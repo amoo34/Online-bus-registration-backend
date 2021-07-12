@@ -1,7 +1,7 @@
 const mongooes = require("mongoose");
 
 
-// mongodb connectivity
+// mongodb connectivity mongodb://localhost/BusRegistration
 // mongodb://10.122.0.4:27017/thinkiotadm:fpS3tGCZYxD2pm6v
 mongooes.connect("mongodb://user:user@cluster0-shard-00-00.exumz.mongodb.net:27017,cluster0-shard-00-01.exumz.mongodb.net:27017,cluster0-shard-00-02.exumz.mongodb.net:27017/drivers?ssl=true&replicaSet=atlas-7742fz-shard-0&authSource=admin&retryWrites=true&w=majority",{
     // mongooes.connect("mongodb://10.122.0.4:27017/thinkiotadm:fpS3tGCZYxD2pm6v",{

@@ -28,14 +28,15 @@ const getStudentsData =async (req,res,next) =>{
 const updateBusData =async (req,res,next) =>{
 
 
-    console.log("update dash data",req.body.busId,req.body.id)
+    console.log("update dash data",req.body.busStartTime,req.body.busEndTime)
     const _id = req.body.id
 
     // const studentsLength = await Student.find()
     try{
         const bus = await Bus.updateOne({_id},{
             $set:{
-                busNumber:req.body.busId
+                startingTime:req.body.busStartTime,
+                endingTime:req.body.busEndTime
             }
         })
         console.log(bus)

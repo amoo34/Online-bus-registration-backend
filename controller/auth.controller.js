@@ -2,6 +2,7 @@ const Bus=require("../model/bus.model");
 const Parent=require("../model/parent.model");
 const Student=require("../model/student.modal");
 const Driver1 = require("../model/driver1.model");
+const Admin = require("../model/admin.model");
 
 const bcrypt = require("bcrypt");
 const jwt = require('jsonwebtoken');
@@ -330,14 +331,14 @@ else{
                 if(result){
                     let name=usr.regNumber;
                     const accessToken = jwt.sign({ name }, 'energyToken');
-                    if(usr.isfee=="yes"){
+                    // if(usr.isfee=="yes"){
 
                         res.status(200).json({user:usr,idtoken:accessToken,message:"Log in successfull"})
-                    }else{
-                        res.status(400).json({message:"fee is not"})
+                    // }else{
+                    //     res.status(400).json({message:"fee is not"})
 
                     }
-                }else{
+                else{
                     res.status(401).json({message:'Password does not match'})
                 }  
             })
@@ -354,5 +355,72 @@ else{
 }
 
 
+async function  AdminSignUp(req,res,next){
+    console.log(req.body)
+    try{
 
-module.exports={getBus,deleteStudent,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic,Driver1SignUp,DriverLogin1}
+        const {name,email,password}=req.body;
+
+        if(!name || !email || !password) {
+            res.status(400).json({message:"bad request"});
+        }
+
+        const doesExist = await Admin.findOne({email});
+
+        if(doesExist){res.status(409).json({message: `${email} already exist`})}
+
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(password, salt, function(err, hash) {
+                hashedPass=hash
+                const admin= new Admin({email,name,password:hash});
+                admin.save().then((resp)=>
+                    res.status(200).json(resp)
+                )
+                .catch((err)=>res.status(501).send(err));
+            });
+        });
+
+
+        
+    }
+    catch(error){
+        res.status(400).json(error);
+    }
+
+}
+
+async function AdminLogin(req,res,next){
+
+    const {email,password}=req.body;
+    
+    await Admin.findOne({email})
+    .then((usr)=>{
+        if(usr){
+            bcrypt.compare(password, usr.password, function(err, result) {
+                if(result){
+                    let name=usr.email;
+                    const accessToken = jwt.sign({ name }, 'energyToken');
+                    // if(usr.isfee=="yes"){
+
+                        res.status(200).json({user:usr,idtoken:accessToken,message:"Log in successfull"})
+                    // }else{
+                    //     res.status(400).json({message:"fee is not"})
+
+                    }
+                else{
+                    res.status(401).json({message:'Password does not match'})
+                }  
+            })
+        }else{
+            res.status(501).json({message:'user account not exist'})
+        }
+
+    })
+    .catch((err)=>res.status(400).json({message:'Database connection error occured'}))
+    
+    
+
+}
+
+module.exports={getBus,AdminLogin,deleteStudent,AdminSignUp,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic,Driver1SignUp,DriverLogin1}

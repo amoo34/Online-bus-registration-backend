@@ -1,6 +1,15 @@
 const mongooes = require("mongoose");
 const Schema = mongooes.Schema
 
+const currentLocationSchema = new mongooes.Schema({
+    lat:{
+        type:String
+    },
+    long:{
+        type:String
+    }
+})
+
 const DriverSchema=new Schema({
     name:{
         type: String
@@ -18,6 +27,12 @@ const DriverSchema=new Schema({
     bussNo:{
         type:String,
         default: null
+    },
+    isLive:{
+        type:Boolean
+    },
+    currentLocation:{
+        type: currentLocationSchema
     }
 });
 

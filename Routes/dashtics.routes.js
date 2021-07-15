@@ -7,4 +7,7 @@ route.get('/buses',dashticsController.getBusesData)
 route.get('/students',dashticsController.getStudentsData)
 route.post('/buses',dashticsController.updateBusData)
 route.patch('/students',dashticsController.updateStudentData)
+route.get('/drivers',dashticsController.getDrivers)
+route.patch('/drivers',dashticsController.updateDriverData)
+
 module.exports = route

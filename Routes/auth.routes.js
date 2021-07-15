@@ -8,7 +8,7 @@ const location=require("../controller/location.controller")
 route.post("/busregister",auth.Busregister);
 route.post("/parentregister",auth.Parentregister);
 route.post("/studentregister",auth.Studentregister);
-
+route.post("/adminRegister",auth.AdminSignUp)
 route.post("/driverSignup",auth.Driver1SignUp);
 route.post("/driverLogin",auth.DriverLogin1);
 
@@ -16,7 +16,7 @@ route.post("/driverLogin",auth.DriverLogin1);
 route.post("/buslogin",auth.Buslogin);
 route.post("/parentlogin",auth.Parentlogin);
 route.post("/studentlogin",auth.Studentlogin);
-
+route.post("/adminLogin",auth.AdminLogin)
 
 // get and set driver location
 

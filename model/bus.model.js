@@ -41,6 +41,13 @@ const BusSchema=new Schema({
     password:{
         type: String
     },
+
+    startTime:{
+        type:String
+    },
+    endTime:{
+        type:String
+    },
    
     Date:{
         type: Date,

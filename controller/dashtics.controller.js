@@ -7,8 +7,9 @@ const getDashticsData =async (req,res,next) =>{
     console.log("Getting dash data")
     const students = await Student.countDocuments()
     const buses = await Bus.countDocuments()
-    console.log(students)
-    return res.status(200).json({success:true,studentsData:students,busesData:buses})
+    const drivers = await Driver1.countDocuments()
+    // console.log(students)
+    return res.status(200).json({success:true,studentsData:students,busesData:buses,driversData:drivers})
 }
 
 const getBusesData =async (req,res,next) =>{

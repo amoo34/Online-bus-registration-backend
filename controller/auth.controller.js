@@ -194,7 +194,7 @@ const postNewStudentPassword =async (req, res, next) => {
 async function  Busregister(req,res,next){
     try{
 
-        const {busNumber,driverName,startMarkerPosition,endMarkerPosition,password,startingAddress,endingAddress}=req.body;
+        const {busNumber,driverName,startMarkerPosition,endMarkerPosition,password,startingAddress,endingAddress,startTime,endTime}=req.body;
 
         if(!busNumber || !password ) {
             res.status(400).json({message:"bad request"});
@@ -210,7 +210,7 @@ async function  Busregister(req,res,next){
                 hashedPass=hash
                 
                 
-                const bus= new Bus({busNumber,startingAddress:startingAddress,endingAddress:endingAddress,driverName,startingPoint:startMarkerPosition,endingPoint:endMarkerPosition,password:hash});
+                const bus= new Bus({busNumber,startingAddress:startingAddress,endingAddress:endingAddress,driverName,startingPoint:startMarkerPosition,endingPoint:endMarkerPosition,startTime:startTime,endTime:endTime, password:hash});
                 bus.save().then((resp)=>
                     res.status(200).json(resp)
                 )

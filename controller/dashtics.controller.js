@@ -26,18 +26,42 @@ const getStudentsData =async (req,res,next) =>{
     return res.status(200).json({success:true,studentsData:students})
 }
 
-const updateBusData =async (req,res,next) =>{
+const deleteBus =async (req,res,next) =>{
+    // const studentsLength = await Student.find()
+    console.log(req.body.id)
+    const buss = await Bus.deleteOne({_id:req.body.id})
+    return res.status(200).json({success:true})
+}
 
+const deleteStudent =async (req,res,next) =>{
+    // const studentsLength = await Student.find()
+    console.log(req.body.id)
+    const buss = await Student.deleteOne({_id:req.body.id})
+    return res.status(200).json({success:true})
+}
+
+const deleteDriver =async (req,res,next) =>{
+    // const studentsLength = await Student.find()
+    console.log(req.body.id)
+    const buss = await Driver1.deleteOne({_id:req.body.id})
+    return res.status(200).json({success:true})
+}
+
+const updateBusData =async (req,res,next) =>{
 
     console.log("update dash data",req.body.busStartTime,req.body.busEndTime)
     const _id = req.body.id
-
+    const {busNumber,startingAddress,endingAddress,startTime,endTime} = req.body;
+console.log(req.body)
     // const studentsLength = await Student.find()
     try{
         const bus = await Bus.updateOne({_id},{
             $set:{
-                startingTime:req.body.busStartTime,
-                endingTime:req.body.busEndTime
+                busNumber:busNumber,
+                startingAddress:startingAddress,
+                endingAddress:endingAddress,
+                startingTime: startTime,
+                endingTime:endTime
             }
         })
         console.log(bus)
@@ -53,13 +77,15 @@ const updateDriverData =async (req,res,next) =>{
 
 
     console.log("update dash data",req.body.busNo,req.body.id)
-    const _id = req.body.id
+    const {id,bussNo,email,name} = req.body;
 
     // const studentsLength = await Student.find()
     try{
-        const bus = await Driver1.updateOne({_id},{
+        const bus = await Driver1.updateOne({_id:id},{
             $set:{
-                bussNo:req.body.busNo
+                bussNo:bussNo,
+                email:email,
+                name:name
             }
         })
         console.log(bus)
@@ -71,14 +97,15 @@ const updateDriverData =async (req,res,next) =>{
 }
 
 const updateStudentData =async (req,res,next) =>{
-    console.log("update dash data",req.body.studentRegNumber,req.body.id)
-    const _id = req.body.id
+    const {id,isfee,nic} = req.body
+    console.log(req.body)
 
     // const studentsLength = await Student.find()
     try{
-        const student = await Student.updateOne({_id},{
+        const student = await Student.updateOne({_id : id},{
             $set:{
-                regNumber:req.body.studentRegNumber
+                isfee:isfee,
+                nic:nic
             }
         })
         console.log(student)
@@ -111,5 +138,8 @@ module.exports = {
     getBusesData,
     updateBusData,
     getStudentsData,
-    updateStudentData
+    updateStudentData,
+    deleteBus,
+    deleteStudent,
+    deleteDriver
 }

@@ -36,6 +36,10 @@ io.on('connection', (socket) => {
       });
   });
 
+  var cors = require('cors')
+
+app.use(cors())
+
 server.listen(port,(e)=>{
     console.log(`node server runing at port ${port}`)
 })

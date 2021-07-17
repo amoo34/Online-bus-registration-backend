@@ -24,6 +24,8 @@ const DriverSchema=new Schema({
         type: Date,
         default: Date.now
     },
+    resetToken:String,
+    resetTokenExpiration:Date,
     bussNo:{
         type:String,
         default: null

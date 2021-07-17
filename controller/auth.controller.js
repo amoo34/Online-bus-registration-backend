@@ -3,11 +3,193 @@ const Parent=require("../model/parent.model");
 const Student=require("../model/student.modal");
 const Driver1 = require("../model/driver1.model");
 const Admin = require("../model/admin.model");
-
+const nodemailer = require('nodemailer');
 const bcrypt = require("bcrypt");
+const crypto = require('crypto')
 const jwt = require('jsonwebtoken');
+const sendgridTransport = require('nodemailer-sendgrid-transport')
 
+var transporter = nodemailer.createTransport(sendgridTransport({
+    auth:{
+        api_key:'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'
+    }
+}))
 
+async function resetDriverPass(req,res,next){
+    console.log("reset pass",req.body.userEmail)
+
+    crypto.randomBytes(32,(err,buffer)=>{
+        if(err){
+            console.log(err)
+        }
+        const token = buffer.toString('hex')
+        Driver1.find({email:req.body.userEmail})
+        .then(user=>{
+            if(!user){
+                res.status(404).send("No User Found")
+            }
+            console.log(user)
+            // user.resetToken = token;
+            // user.resetTokenExpiration = Date.now() + 3600000
+            return Driver1.updateOne({email:req.body.userEmail},{$set:{
+                resetToken: token,
+                resetTokenExpiration: Date.now() + 3600000
+            }})
+             
+        })
+        .then(result=>{
+            const mailOptions = {
+                from: 'moizfiverr123@gmail.com', // sender address
+                to: req.body.userEmail, // list of receivers
+                subject: 'Password Reset', // Subject line
+                html: `<p>You request a password reset</p>
+                        <p>Click this link</p>
+                        <a href="http://localhost:3000/reset/driver/${token}">Link</a>
+                `
+                // plain text body
+              };
+           //    console.log(transporter)
+              transporter.sendMail(mailOptions, function (err, info) {
+                 if(err){
+                   console.log(err)
+                   res.status(400).send(err)
+               }
+                 else{
+                   console.log(info);
+                   res.status(200).send(info)
+                 }
+              });
+        })
+    })
+}
+
+const postNewDriverPassword =async (req, res, next) => {
+    const newPassword = req.body.password;
+    // const userId = req.body.userId;
+    const passwordToken = req.body.passwordToken;
+    let resetUser;
+    console.log(passwordToken)
+    Driver1.findOne({
+      resetToken: passwordToken,
+      resetTokenExpiration: { $gt: Date.now() },
+    //   _id: userId
+    })
+      .then(user => {
+        resetUser = user;
+        
+        // return bcrypt.hash(newPassword, 12);
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(newPassword, salt, async function(err, hash) {
+                hashedPass=hash
+                console.log(newPassword)
+                console.log(hash)
+                const data = await Driver1.updateOne({ 
+                    resetToken: passwordToken
+                 },{$set:{
+                    password: hashedPass,
+                    resetToken :undefined,
+                    resetTokenExpiration : undefined
+                }})
+                console.log(data)
+                
+                // .catch((err)=>res.status(501).send(err));
+            });
+        });
+        return res.status(200).send("Password updated")
+      })
+      .catch(err=>{
+          console.log(err)
+      })
+  };
+
+  async function resetStudentPass(req,res,next){
+    console.log("reset pass",req.body.userEmail)
+
+    crypto.randomBytes(32,(err,buffer)=>{
+        if(err){
+            console.log(err)
+        }
+        const token = buffer.toString('hex')
+        Student.find({email:req.body.userEmail})
+        .then(user=>{
+            if(!user){
+                res.status(404).send("No User Found")
+            }
+            console.log(user)
+            // user.resetToken = token;
+            // user.resetTokenExpiration = Date.now() + 3600000
+            return Student.updateOne({email:req.body.userEmail},{$set:{
+                resetToken: token,
+                resetTokenExpiration: Date.now() + 3600000
+            }})
+             
+        })
+        .then(result=>{
+            const mailOptions = {
+                from: 'moizfiverr123@gmail.com', // sender address
+                to: req.body.userEmail, // list of receivers
+                subject: 'Password Reset', // Subject line
+                html: `<p>You request a password reset</p>
+                        <p>Click this link</p>
+                        <a href="http://localhost:3000/reset/driver/${token}">Link</a>
+                `
+                // plain text body
+              };
+           //    console.log(transporter)
+              transporter.sendMail(mailOptions, function (err, info) {
+                 if(err){
+                   console.log(err)
+                   res.status(400).send(err)
+               }
+                 else{
+                   console.log(info);
+                   res.status(200).send(info)
+                 }
+              });
+        })
+    })
+}
+
+const postNewStudentPassword =async (req, res, next) => {
+    const newPassword = req.body.password;
+    // const userId = req.body.userId;
+    const passwordToken = req.body.passwordToken;
+    let resetUser;
+    console.log(passwordToken)
+    Student.findOne({
+      resetToken: passwordToken,
+      resetTokenExpiration: { $gt: Date.now() },
+    //   _id: userId
+    })
+      .then(user => {
+        resetUser = user;
+        
+        // return bcrypt.hash(newPassword, 12);
+        const saltRounds = 10;
+        bcrypt.genSalt(saltRounds, function(err, salt) {
+            bcrypt.hash(newPassword, salt, async function(err, hash) {
+                hashedPass=hash
+                console.log(newPassword)
+                console.log(hash)
+                const data = await Student.updateOne({ 
+                    resetToken: passwordToken
+                 },{$set:{
+                    password: hashedPass,
+                    resetToken :undefined,
+                    resetTokenExpiration : undefined
+                }})
+                console.log(data)
+                
+                // .catch((err)=>res.status(501).send(err));
+            });
+        });
+        return res.status(200).send("Password updated")
+      })
+      .catch(err=>{
+          console.log(err)
+      })
+  };
 
 async function  Busregister(req,res,next){
     try{
@@ -197,7 +379,7 @@ async function Studentlogin(req,res,next){
 
                         res.status(200).json({user:{usr},token:accessToken,message:"Log in successfull"})
                     }else{
-                        res.status(400).json({message:"fee is not"})
+                        res.status(400).json({message:"Fee is not paid.Contact Admin"})
 
                     }
                 }else{
@@ -423,4 +605,4 @@ async function AdminLogin(req,res,next){
 
 }
 
-module.exports={getBus,AdminLogin,deleteStudent,AdminSignUp,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic,Driver1SignUp,DriverLogin1}
+module.exports={getBus,postNewStudentPassword,resetStudentPass,postNewDriverPassword,resetDriverPass,AdminLogin,deleteStudent,AdminSignUp,updatestudent,Busregister,Parentregister,Studentregister,Buslogin,Parentlogin,Studentlogin,getStudentByNic,Driver1SignUp,DriverLogin1}

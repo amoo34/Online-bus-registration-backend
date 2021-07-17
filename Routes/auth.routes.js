@@ -11,11 +11,14 @@ route.post("/studentregister",auth.Studentregister);
 route.post("/adminRegister",auth.AdminSignUp)
 route.post("/driverSignup",auth.Driver1SignUp);
 route.post("/driverLogin",auth.DriverLogin1);
-
+route.post("/driverReset",auth.resetDriverPass);
+route.post("/updateDriverPassword",auth.postNewDriverPassword);
 // login controller
 route.post("/buslogin",auth.Buslogin);
 route.post("/parentlogin",auth.Parentlogin);
 route.post("/studentlogin",auth.Studentlogin);
+route.post("/studentReset",auth.resetStudentPass);
+route.post("/updateStudentPassword",auth.postNewStudentPassword);
 route.post("/adminLogin",auth.AdminLogin)
 
 // get and set driver location
